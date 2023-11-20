@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  mc:
+    image: itzg/minecraft-server
+    container_name: mc_serv
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      ONLINE_MODE: "FALSE"
+      RCON_PASSWORD: "Password"
+      ENABLE_RCON: "true"
+    volumes:
+      - ./data:/data
+  minecraft-exporter:
+    image: ghcr.io/dirien/minecraft-exporter
+    container_name: mc_exporter
+    environment:  
+      MC_WORLD: /world
+      MC_RCON_ADDRESS: mc_serv:25575
+      MC_RCON_PASSWORD: "Password"
+    ports:
+      - "9150:9150" 
+    volumes:
+      - ./data/world:/world:ro
+  minecraft-exporter2:
+    build: https://github.com/Joshi425/minecraft-exporter.git
+    container_name: mc_exporter2
+    environment:
+      RCON_HOST: mc_serv
+      RCON_PORT: "25575"
+      RCON_PASSWORD: "Password"
+    ports:
+    - 8000:8000
+    volumes:
+    - ./data/world:/world:ro
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: "YourAdminPassword"
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - ./prometheus/data:/prometheus

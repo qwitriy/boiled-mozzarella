@@ -1,0 +1,11 @@
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+
+scrape_configs:
+  - job_name: 'minecraft_exporter1'
+    static_configs:
+      - targets: ['mc_exporter:9150']
+  - job_name: minecraft_exporter2'
+    static_configs:
+      - targets: ['mc_exporter2:8000']
+  

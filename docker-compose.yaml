@@ -22,6 +22,7 @@ services:
       MC_WORLD: /world
       MC_RCON_ADDRESS: mc_serv:25575
       MC_RCON_PASSWORD: "Password"
+      MC_NAME_SOURCE: "offline"
     ports:
       - "9150:9150" 
     volumes:
